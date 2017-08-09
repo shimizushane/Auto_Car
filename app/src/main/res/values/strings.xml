@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Connect Mode</string>
+    <string-array name="connect_choice">
+        <item>AP mode</item>
+        <item>Station mode</item>
+    </string-array>
+</resources>

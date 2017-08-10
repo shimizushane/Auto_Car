@@ -7,6 +7,14 @@
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
+        android:ems="15"
+        android:inputType="number|numberDecimal"
+        android:digits="0123456789."
+        android:maxLength="15"/>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ok" />
 </LinearLayout>

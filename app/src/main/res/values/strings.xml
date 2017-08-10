@@ -4,4 +4,6 @@
         <item>AP mode</item>
         <item>Station mode</item>
     </string-array>
+    <string name="input_ip_address">Input Ip Address</string>
+    <string name="ok">OK</string>
 </resources>

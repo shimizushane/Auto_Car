@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Control_Activity extends Activity implements Button.OnClickListener, View.OnTouchListener {
-    WebView webView;
+    WebView webView,webView1;
     ImageButton btn_right, btn_left, btn_top, btn_down;
     String ip_address, control_web;
     RelativeLayout rl;
@@ -66,22 +66,26 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         switch (v.getId()) {
             case R.id.imageButton1:
                 control_web = "http://" + ip_address + ":5000/?control=front";
-                new WebView(this).loadUrl(control_web);
+//                new WebView(this).loadUrl(control_web);
+                webView1.loadUrl(control_web);
                 Toast.makeText(Control_Activity.this, ip_address, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton2:
                 control_web = "http://" + ip_address + ":5000/?control=back";
-                new WebView(this).loadUrl(control_web);
+//                new WebView(this).loadUrl(control_web);
+                webView1.loadUrl(control_web);
                 Toast.makeText(Control_Activity.this, "down", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton3:
                 control_web = "http://" + ip_address + ":5000/?control=left";
-                new WebView(this).loadUrl(control_web);
+//                new WebView(this).loadUrl(control_web);
+                webView1.loadUrl(control_web);
                 Toast.makeText(Control_Activity.this, "left", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton4:
                 control_web = "http://" + ip_address + ":5000/?control=right";
-                new WebView(this).loadUrl(control_web);
+//                new WebView(this).loadUrl(control_web);
+                webView1.loadUrl(control_web);
                 Toast.makeText(Control_Activity.this, "right", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -99,7 +103,8 @@ public class Control_Activity extends Activity implements Button.OnClickListener
                 downX = event.getX();  // 觸控的 X 軸位置
                 downY = event.getY();  // 觸控的 Y 軸位置
                 touchchk = true;
-                tv2.setText("X軸 : " + String.valueOf(downX) + "\tY軸 : " + String.valueOf(downY));
+                tv1.setText("點擊!!");
+                tv2.setText("X軸 : " + String.valueOf(downX) + "\tY軸 : " + String.valueOf(downY) + ((touchchk == true)?"\ttrue":"\tfalse"));
                 return true;
             case MotionEvent.ACTION_MOVE: // 拖曳
                 upX = event.getX();
@@ -112,30 +117,41 @@ public class Control_Activity extends Activity implements Button.OnClickListener
 //                if (upY < downY && jiaodu > 45)
                 if (((downY - upY) > 150) && jiaodu > 45 && touchchk){//上
                     control_web = "http://" + ip_address + ":5000/?control=front";
-                    new WebView(this).loadUrl(control_web);
-                    tv1.setText("角度:" + jiaodu + ", 動作:上\n" + control_web);
+//                    new WebView(this).loadUrl(control_web);
+                    webView1.loadUrl(control_web);
+                    tv1.setText("角度:" + jiaodu + ", 動作:上\n" + control_web + ((touchchk == true)?"\ttrue":"\tfalse"));
                     touchchk = false;
                 } //else if (upY > downY && jiaodu > 45) {//下
                     else if(((downY - upY) < -150) && jiaodu > 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=back";
-                    new WebView(this).loadUrl(control_web);
-                    tv1.setText("角度:" + jiaodu + ", 動作:下\n" + control_web);
+//                    new WebView(this).loadUrl(control_web);
+                    webView1.loadUrl(control_web);
+                    tv1.setText("角度:" + jiaodu + ", 動作:下\n" + control_web + ((touchchk == true)?"\ttrue":"\tfalse"));
+                    touchchk = false;
                 } //else if (upX < downX && jiaodu <= 45) {//左
                     else if(((downX - upX) > 150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=left";
-                    new WebView(this).loadUrl(control_web);
-                    tv1.setText("角度:" + jiaodu + ", 動作:左\n" + control_web);
+//                    new WebView(this).loadUrl(control_web);
+                    webView1.loadUrl(control_web);
+                    tv1.setText("角度:" + jiaodu + ", 動作:左\n" + control_web + ((touchchk == true)?"\ttrue":"\tfalse"));
+                    touchchk = false;
                 } //else if (upX > downX && jiaodu <= 45) {//右
                     else if(((downX - upX) < -150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=right";
-                    new WebView(this).loadUrl(control_web);
-                    tv1.setText("角度:" + jiaodu + ", 動作:右\n" + control_web);
+//                    new WebView(this).loadUrl(control_web);
+                    webView1.loadUrl(control_web);
+                    tv1.setText("角度:" + jiaodu + ", 動作:右\n" + control_web + ((touchchk == true)?"\ttrue":"\tfalse"));
+//                    touchchk = false;
                 }
+//                new WebView(this).loadUrl(control_web);
+//                touchchk = false;
                 return true;
             case MotionEvent.ACTION_UP: // 放開
-                control_web = "http://" + ip_address + ":5000/?control=stop";
-                new WebView(this).loadUrl(control_web);
-                tv1.setText("動作:離開\n" + control_web);
+                    control_web = "http://" + ip_address + ":5000/?control=stop";
+//                    new WebView(this).loadUrl(control_web);
+                    webView1.loadUrl(control_web);
+                    tv1.setText("動作:離開\n" + control_web);
+                    touchchk = false;
                 return true;
         }
 

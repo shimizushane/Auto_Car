@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsoluteLayout;
@@ -48,10 +49,11 @@ public class Control_Activity extends Activity implements Button.OnClickListener
 
         webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
+//        webView.setWebChromeClient(new WebChromeClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setSupportZoom(true);
-//        webView.loadUrl("http://192.168.0.1:5000");
-        webView.loadUrl("http://wwww.gooogle.com.tw");
+        webView.loadUrl("http://192.168.0.1:5000");
+//        webView.loadUrl("http://wwww.gooogle.com.tw");
 
         webView1 = new WebView(this);
 
@@ -155,8 +157,6 @@ public class Control_Activity extends Activity implements Button.OnClickListener
                     tv1.setText("角度:" + jiaodu + ", 動作:右\n" + control_web + "\n" + String.valueOf(count));
                     touchchk = false;
                 }
-//                new WebView(this).loadUrl(control_web);
-//                touchchk = false;
                 return true;
             case MotionEvent.ACTION_UP: // 放開
                     control_web = "http://" + ip_address + ":5000/?control=stop";
@@ -171,3 +171,23 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     }
 
 }
+
+/*
+原本做法: 用 new WebView(this).loadUrl(control_web);
+
+App 狀態: 1.影像仍有傳輸 2.指令想顯示出來
+造成結果: 傳輸數個指令後，車子無法再接收指令，而造成車子依最後一個指令而動作，數分鐘後，又可接收指令
+
+可能問題點:
+1.傳送端
+2.接收端
+
+依App上顯示有傳送訊息，但Pi沒收到
+
+結論:
+有可能是因為new object(匿名物件)使用太過頻繁，造成手機空間不足或其他因素，使得手機沒釋放出object(匿名物件)，而導致沒new object，造成指令傳輸停擺
+
+註: 測試手機有空間不足的因素，目前尚未拿另一支手機測試
+
+
+*/

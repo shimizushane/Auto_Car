@@ -65,6 +65,30 @@
             android:layout_above="@+id/imageButton2"
             android:layout_toEndOf="@+id/imageButton3"
             android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView_time"
+            android:layout_below="@+id/textView_time"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView_temperature"
+            android:layout_below="@+id/textView_temperature"
+            android:text="TextView" />
     </RelativeLayout>
 
 </FrameLayout>

@@ -16,8 +16,14 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.dodoro.www.auto_car.TemperatureHumidity.*;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class Control_Activity extends Activity implements Button.OnClickListener, View.OnTouchListener {
+public class Control_Activity extends Activity implements Button.OnClickListener, View.OnTouchListener,ChildEventListener {
     WebView webView,webView1;
     ImageButton btn_right, btn_left, btn_top, btn_down;
     String ip_address, control_web;
@@ -26,8 +32,9 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     int  count = 0;
 
     private float upX, upY, downX, downY;
-    private TextView tv1, tv2;
+    private TextView tv1, tv2, tv_time, tv_temp, tv_humi;
 
+    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,8 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_control_);
 //        getSupportActionBar().hide();
+
+        myRef = FirebaseDatabase.getInstance().getReference("TemperatureHumidity");
 
         btn_top = (ImageButton) findViewById(R.id.imageButton1);
         btn_down = (ImageButton) findViewById(R.id.imageButton2);
@@ -44,6 +53,10 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         rl = (RelativeLayout)findViewById(R.id.relativelayout);
         tv1 = (TextView) findViewById(R.id.textView1);
         tv2 = (TextView) findViewById(R.id.textView2);
+
+        tv_time = (TextView)findViewById(R.id.textView_time) ;
+        tv_temp = (TextView)findViewById(R.id.textView_temperature);
+        tv_humi = (TextView)findViewById(R.id.textView_humidity);
 
         ip_address = "192.168.0.1";
 
@@ -63,6 +76,7 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         btn_right.setOnClickListener(this);
 
         rl.setOnTouchListener(this);
+        myRef.addChildEventListener(this);
 
     }
 
@@ -170,6 +184,36 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        getSensorInfor infor = dataSnapshot.getValue(getSensorInfor.class);
+        String str_temp = String.valueOf(infor.getTemperature());
+        String str_humi = String.valueOf(infor.getHumidity());
+
+        tv_time.setText(infor.getDate());
+        tv_temp.setText(str_temp);
+        tv_humi.setText(str_humi);
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
 }
 
 /*

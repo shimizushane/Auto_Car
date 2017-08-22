@@ -86,6 +86,13 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textView_temperature"
             android:layout_below="@+id/textView_temperature" />
+
+        <TextView
+            android:id="@+id/textView_dis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/textView_humidity" />
     </RelativeLayout>
 
 </FrameLayout>

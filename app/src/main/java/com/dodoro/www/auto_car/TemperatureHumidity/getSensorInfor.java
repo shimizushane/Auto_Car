@@ -8,14 +8,16 @@ public class getSensorInfor {
     String date;
     float temperature;
     float humidity;
+    float distance;
 
     public getSensorInfor() {
     }
 
-    public getSensorInfor(String date, float temperature, float humidity) {
+    public getSensorInfor(String date, float temperature, float humidity, float distance) {
         this.date = date;
         this.temperature = temperature;
         this.humidity = humidity;
+        this.distance = distance;
     }
 
     public String getDate() {
@@ -29,4 +31,6 @@ public class getSensorInfor {
     public float getHumidity() {
         return humidity;
     }
+
+    public float getDistance(){return distance;}
 }

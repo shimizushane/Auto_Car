@@ -28,7 +28,7 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     boolean touchchk;
 
     private float upX, upY, downX, downY;
-    private TextView tv1, tv2, tv_time, tv_temp, tv_humi;
+    private TextView tv1, tv2, tv_time, tv_temp, tv_humi, tv_dis;
 
     DatabaseReference myRef;
 
@@ -56,6 +56,7 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         tv_time = (TextView)findViewById(R.id.textView_time) ;
         tv_temp = (TextView)findViewById(R.id.textView_temperature);
         tv_humi = (TextView)findViewById(R.id.textView_humidity);
+        tv_dis = (TextView)findViewById(R.id.textView_dis);
 
         ip_address = "192.168.0.1";
 
@@ -176,10 +177,12 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         getSensorInfor infor = dataSnapshot.getValue(getSensorInfor.class);
         String str_temp = String.valueOf(infor.getTemperature());
         String str_humi = String.valueOf(infor.getHumidity());
+        String str_dis = String.valueOf(infor.getDistance());
 
         tv_time.setText(infor.getDate());
         tv_temp.setText(str_temp);
         tv_humi.setText(str_humi);
+        tv_dis.setText(str_dis + " cm");
     }
 
     @Override
@@ -222,3 +225,9 @@ App 狀態: 1.影像仍有傳輸 2.指令有顯示出來
 
 
 */
+
+/*
+說明文2
+
+1.
+ */

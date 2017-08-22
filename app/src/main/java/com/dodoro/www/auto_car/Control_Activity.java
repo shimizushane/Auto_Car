@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -67,6 +68,31 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         webView.getSettings().setSupportZoom(true);
         webView.loadUrl("http://192.168.0.1:5000");
 //        webView.loadUrl("http://wwww.gooogle.com.tw");
+
+        WebSettings settings = webView.getSettings();
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+
+
+        /*
+第一种方法：
+WebSettings settings = webView.getSettings();
+settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+LayoutAlgorithm是一个枚举用来控制页面的布局，有三个类型：
+1.NARROW_COLUMNS：可能的话使所有列的宽度不超过屏幕宽度
+2.NORMAL：正常显示不做任何渲染
+3.SINGLE_COLUMN：把所有内容放大webview等宽的一列中
+用SINGLE_COLUMN类型可以设置页面居中显示，页面可以放大缩小，但这种方法不怎么好，有时候会让你的页面布局走样而且我测了一下，只能显示中间那一块，超出屏幕的部分都不能显示。
+
+第二种方法：
+//设置加载进来的页面自适应手机屏幕
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+第一个方法设置webview推荐使用的窗口，设置为true。第二个方法是设置webview加载的页面的模式，也设置为true。
+这方法可以让你的页面适应手机屏幕的分辨率，完整的显示在屏幕上，可以放大缩小。
+两种方法都试过，推荐使用第二种方法
+
+         */
 
         //webView1連結操控http...get
         webView1 = new WebView(this);

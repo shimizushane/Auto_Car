@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //隱藏ActionBar
         getSupportActionBar().hide();
         lv = (ListView)findViewById(R.id.listview1);
 
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(MainActivity.this,String.valueOf(position),Toast.LENGTH_SHORT).show();
                 switch (position)
                 {
                     case 0:
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         });
-
                         cdiag = new AlertDialog.Builder(MainActivity.this).setTitle(R.string.input_ip_address).setView(diagView).show();
                         break;
                 }

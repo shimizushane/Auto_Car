@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //隱藏ActionBar
+        //隱藏ActionBar方法1
         getSupportActionBar().hide();
         lv = (ListView)findViewById(R.id.listview1);
 

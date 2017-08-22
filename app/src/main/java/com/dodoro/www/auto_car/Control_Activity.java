@@ -3,6 +3,7 @@ package com.dodoro.www.auto_car;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +35,7 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //隱藏ActionBar方法2，注意extends Activity，而非AppCompatActivity，因為AppCompatActivity上方的父類別有ActionBar有ActionBar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_control_);
 //        getSupportActionBar().hide();
@@ -76,7 +78,6 @@ public class Control_Activity extends Activity implements Button.OnClickListener
 
         //監聽觸控 -- 作用-滑動操控
         rl.setOnTouchListener(this);
-
         //監聽firebase有無新增數據
         myRef.addChildEventListener(this);
 
@@ -117,12 +118,14 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     public boolean onTouch(View v, MotionEvent event) {
         // 判斷觸控的動作
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: // 按下
+            // 按下
+            case MotionEvent.ACTION_DOWN:
                 downX = event.getX();  // 觸控的 X 軸位置
                 downY = event.getY();  // 觸控的 Y 軸位置
                 touchchk = true;
                 return true;
-            case MotionEvent.ACTION_MOVE: // 拖曳
+            // 拖曳
+            case MotionEvent.ACTION_MOVE:
                 upX = event.getX();
                 upY = event.getY();
                 float x = Math.abs(upX - downX);
@@ -130,32 +133,35 @@ public class Control_Activity extends Activity implements Button.OnClickListener
                 double z = Math.sqrt(x * x + y * y);
                 int jiaodu = Math.round((float) (Math.asin(y / z) / Math.PI * 180));//計算角度
 
-                //上
+                Log.d("test",String.valueOf(x) + "\t" + String.valueOf((downX - upX)));
+
+                //輸出"上"
                 if (((downY - upY) > 150) && jiaodu > 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=front";
                     webView1.loadUrl(control_web);
                     touchchk = false;
                 }
-                //下
+                //輸出"下"
                 else if(((downY - upY) < -150) && jiaodu > 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=back";
                     webView1.loadUrl(control_web);
                     touchchk = false;
                 }
-                //左
+                //輸出"左"
                 else if(((downX - upX) > 150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=left";
                     webView1.loadUrl(control_web);
                     touchchk = false;
                 }
-                //右
+                //輸出"右"
                 else if(((downX - upX) < -150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=right";
                     webView1.loadUrl(control_web);
                     touchchk = false;
                 }
                 return true;
-            case MotionEvent.ACTION_UP: // 手指放開時，輸出STOP指令
+            // 手指放開時，輸出STOP指令
+            case MotionEvent.ACTION_UP:
                     control_web = "http://" + ip_address + ":5000/?control=stop";
                     webView1.loadUrl(control_web);
                     touchchk = false;

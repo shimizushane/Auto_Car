@@ -3,19 +3,15 @@ package com.dodoro.www.auto_car;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.dodoro.www.auto_car.TemperatureHumidity.*;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +25,6 @@ public class Control_Activity extends Activity implements Button.OnClickListener
     String ip_address, control_web;
     RelativeLayout rl;
     boolean touchchk;
-    int  count = 0;
 
     private float upX, upY, downX, downY;
     private TextView tv1, tv2, tv_time, tv_temp, tv_humi;
@@ -43,8 +38,10 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         setContentView(R.layout.activity_control_);
 //        getSupportActionBar().hide();
 
+        //抓firebase溫濕度數據
         myRef = FirebaseDatabase.getInstance().getReference("TemperatureHumidity");
 
+        //方向四鍵
         btn_top = (ImageButton) findViewById(R.id.imageButton1);
         btn_down = (ImageButton) findViewById(R.id.imageButton2);
         btn_left = (ImageButton) findViewById(R.id.imageButton3);
@@ -60,130 +57,114 @@ public class Control_Activity extends Activity implements Button.OnClickListener
 
         ip_address = "192.168.0.1";
 
+        //webView顯示影像
         webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
-//        webView.setWebChromeClient(new WebChromeClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setSupportZoom(true);
         webView.loadUrl("http://192.168.0.1:5000");
 //        webView.loadUrl("http://wwww.gooogle.com.tw");
 
+        //webView1連結操控http...get
         webView1 = new WebView(this);
 
+        //監聽imagebutton -- 作用-按鍵操控
         btn_top.setOnClickListener(this);
         btn_down.setOnClickListener(this);
         btn_left.setOnClickListener(this);
         btn_right.setOnClickListener(this);
 
+        //監聽觸控 -- 作用-滑動操控
         rl.setOnTouchListener(this);
+
+        //監聽firebase有無新增數據
         myRef.addChildEventListener(this);
 
     }
 
+    //按鍵操控 - 四方向
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageButton1:
                 control_web = "http://" + ip_address + ":5000/?control=front";
-//                new WebView(this).loadUrl(control_web);
                 webView1.loadUrl(control_web);
-                tv1.setText("前進\t" + control_web);
-//                Toast.makeText(Control_Activity.this, ip_address, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton2:
                 control_web = "http://" + ip_address + ":5000/?control=back";
-//                new WebView(this).loadUrl(control_web);
                 webView1.loadUrl(control_web);
-                tv1.setText("後退\t" + control_web);
-//                Toast.makeText(Control_Activity.this, "down", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton3:
                 control_web = "http://" + ip_address + ":5000/?control=left";
-//                new WebView(this).loadUrl(control_web);
                 webView1.loadUrl(control_web);
-                tv1.setText("左轉\t" + control_web);
-//                Toast.makeText(Control_Activity.this, "left", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.imageButton4:
                 control_web = "http://" + ip_address + ":5000/?control=right";
-//                new WebView(this).loadUrl(control_web);
                 webView1.loadUrl(control_web);
-                tv1.setText("右轉\t" + control_web);
-//                Toast.makeText(Control_Activity.this, "right", Toast.LENGTH_SHORT).show();
                 break;
         }
 
     }
-
+/*
+    滑動操控
+    原理說明:
+    1.紀錄手指觸控螢幕時的位置，touchchk紀錄
+    2.紀錄拖曳滑動的位置
+    3.兩者做計算，距離超過150(自訂)時，且以touchchk=true(做一次性輸出)，才執行車子運行動作，避免一直重複輸出指令
+    4.計算角度(jiaodu)作用，判定方向性，例如，手指滑動右上方2點鐘方向，以45度角作分界，超過45度角判定為"上"，低於45度角判定為"下"
+*/
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        float X = event.getX();
-        float Y = event.getY();
-        switch (event.getAction()) { // 判斷觸控的動作
-
+        // 判斷觸控的動作
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: // 按下
                 downX = event.getX();  // 觸控的 X 軸位置
                 downY = event.getY();  // 觸控的 Y 軸位置
-                count = 0;
                 touchchk = true;
-                tv1.setText("點擊!!" + "\n" + String.valueOf(count));
-                tv2.setText("X軸 : " + String.valueOf(downX) + "\tY軸 : " + String.valueOf(downY) + ((touchchk == true)?"\nTrue":"\nFalse"));
                 return true;
             case MotionEvent.ACTION_MOVE: // 拖曳
-
                 upX = event.getX();
                 upY = event.getY();
                 float x = Math.abs(upX - downX);
                 float y = Math.abs(upY - downY);
                 double z = Math.sqrt(x * x + y * y);
-                int jiaodu = Math.round((float) (Math.asin(y / z) / Math.PI * 180));//角度
-                tv2.setText("X軸 : " + String.valueOf(upX) + "\tY軸 : " + String.valueOf(upY));
-//                if (upY < downY && jiaodu > 45)
-                if (((downY - upY) > 150) && jiaodu > 45 && touchchk){//上
+                int jiaodu = Math.round((float) (Math.asin(y / z) / Math.PI * 180));//計算角度
+
+                //上
+                if (((downY - upY) > 150) && jiaodu > 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=front";
-//                    new WebView(this).loadUrl(control_web);
                     webView1.loadUrl(control_web);
-                    count++;
-                    tv1.setText("角度:" + jiaodu + ", 動作:上\n" + control_web + "\n" + String.valueOf(count));
                     touchchk = false;
-                } //else if (upY > downY && jiaodu > 45) {//下
-                    else if(((downY - upY) < -150) && jiaodu > 45 && touchchk){
+                }
+                //下
+                else if(((downY - upY) < -150) && jiaodu > 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=back";
-//                    new WebView(this).loadUrl(control_web);
                     webView1.loadUrl(control_web);
-                    count++;
-                    tv1.setText("角度:" + jiaodu + ", 動作:下\n" + control_web + "\n" + String.valueOf(count));
                     touchchk = false;
-                } //else if (upX < downX && jiaodu <= 45) {//左
-                    else if(((downX - upX) > 150) && jiaodu <= 45 && touchchk){
+                }
+                //左
+                else if(((downX - upX) > 150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=left";
-//                    new WebView(this).loadUrl(control_web);
                     webView1.loadUrl(control_web);
-                    count++;
-                    tv1.setText("角度:" + jiaodu + ", 動作:左\n" + control_web + "\n" + String.valueOf(count));
                     touchchk = false;
-                } //else if (upX > downX && jiaodu <= 45) {//右
-                    else if(((downX - upX) < -150) && jiaodu <= 45 && touchchk){
+                }
+                //右
+                else if(((downX - upX) < -150) && jiaodu <= 45 && touchchk){
                     control_web = "http://" + ip_address + ":5000/?control=right";
-//                    new WebView(this).loadUrl(control_web);
                     webView1.loadUrl(control_web);
-                    count++;
-                    tv1.setText("角度:" + jiaodu + ", 動作:右\n" + control_web + "\n" + String.valueOf(count));
                     touchchk = false;
                 }
                 return true;
-            case MotionEvent.ACTION_UP: // 放開
+            case MotionEvent.ACTION_UP: // 手指放開時，輸出STOP指令
                     control_web = "http://" + ip_address + ":5000/?control=stop";
-//                    new WebView(this).loadUrl(control_web);
                     webView1.loadUrl(control_web);
-                    tv1.setText("動作:離開\n" + control_web);
                     touchchk = false;
                 return true;
         }
-
         return super.onTouchEvent(event);
     }
 
+    //firebase 資料庫讀取
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         getSensorInfor infor = dataSnapshot.getValue(getSensorInfor.class);

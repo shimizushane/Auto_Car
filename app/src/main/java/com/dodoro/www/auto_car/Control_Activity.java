@@ -200,7 +200,7 @@ public class Control_Activity extends Activity implements Button.OnClickListener
 /*
 原本做法: 用 new WebView(this).loadUrl(control_web);
 
-App 狀態: 1.影像仍有傳輸 2.指令想顯示出來
+App 狀態: 1.影像仍有傳輸 2.指令有顯示出來
 造成結果: 傳輸數個指令後，車子無法再接收指令，而造成車子依最後一個指令而動作，數分鐘後，又可接收指令
 
 可能問題點:

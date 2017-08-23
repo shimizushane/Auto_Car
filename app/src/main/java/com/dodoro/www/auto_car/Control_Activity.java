@@ -72,7 +72,8 @@ public class Control_Activity extends Activity implements Button.OnClickListener
         WebSettings settings = webView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-
+//        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
         /*
 第一种方法：
